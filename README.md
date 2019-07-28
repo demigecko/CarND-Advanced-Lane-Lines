@@ -65,8 +65,6 @@ I used a combination of color and gradient thresholds to generate a binary image
 2. Convert the same test image to gray, and use Sobel operator to detect edges. I use only x-Sobel for lane detetion due to the nature of the lanes are relatively vertical. 
 3. Combine the outcome from  (step1 **or** step 2) to provide the good lane detetion. 
 
-![alt text][image3-1]
-
 
 ```python
 # Threshold x gradient
@@ -83,9 +81,9 @@ Here's an example of my output for this step.  (note: this is not actually from 
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `warper()`, which appears in the 3rd code cell of the Jupyter notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points by the line plots.
+The code for my perspective transform includes a function called `warper()`, which appears in the 3rd code cell of the Jupyter notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose  the source and destination points by the line plots carefully.
 
-
+![alt text][image3-1]
 
 ```python
 src = np.float32(
