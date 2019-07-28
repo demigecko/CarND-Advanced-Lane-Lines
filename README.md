@@ -21,10 +21,11 @@ The goals / steps of this project are the following:
 
 [image1]: ./output_images/undistort_output.png "Undistorted"
 [image2]: ./test_images/test1.jpg "Road Transformed"
-[image3]: ./examples/binary_combo_example.jpg "Binary Example"
-[image4]: ./examples/warped_straight_lines.jpg "Warp Example"
-[image5]: ./examples/color_fit_lines.jpg "Fit Visual"
-[image6]: ./examples/example_output.jpg "Output"
+[image3]: ./output_images/undistort_test1.png "Undistorted"
+[image4]: ./output_images/binary_combo_final.png "Binary Example"
+[image5]: ./examples/warped_straight_lines.jpg "Warp Example"
+[image6]: ./examples/color_fit_lines.jpg "Fit Visual"
+[image7]: ./examples/example_output.jpg "Output"
 [video1]: ./project_video.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
