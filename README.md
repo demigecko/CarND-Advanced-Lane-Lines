@@ -65,6 +65,9 @@ I used a combination of color and gradient thresholds to generate a binary image
 2. Convert the same test image to gray, and use Sobel operator to detect edges. I use only x-Sobel for lane detetion due to the nature of the lanes are relatively vertical. 
 3. Combine the outcome from  (step1 **or** step 2) to provide the good lane detetion. 
 
+![alt text][image3-1]
+
+
 ```python
 # Threshold x gradient
 thresh_min = 20 
