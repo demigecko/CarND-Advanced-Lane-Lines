@@ -23,7 +23,7 @@ The goals / steps of this project are the following:
 [image2]: ./test_images/test1.jpg "Road Transformed"
 [image3]: ./output_images/undistort_test1.png "Undistorted"
 [image4]: ./output_images/binary_combo_final.png "Binary Example"
-[image5]: ./examples/warped_straight_lines.jpg "Warp Example"
+[image5]: ./output_images/warped_straight_lines.jpg "Warp Example"
 [image6]: ./examples/color_fit_lines.jpg "Fit Visual"
 [image7]: ./examples/example_output.jpg "Output"
 [video1]: ./project_video.mp4 "Video"
@@ -62,7 +62,7 @@ I setup a new function called `cal_undistort`  to undistort the test image and o
 I used a combination of color and gradient thresholds to generate a binary image, and the code is in the 3 session. 
 1. Convert the test image from RGB to HLS (hue, lightness, saturation) and extarct the S-channel. The parameter of sautation can improve the lane detetion in differnent color (i.e. White or Yellow) even if under shadow of trees. 
 2. Convert the same test image to gray, and use Sobel operator to detect edges. I use only x-Sobel for lane detetion due to the nature of the lanes are relatively vertical. 
-3. Combine the outcome from 1 or 2 to provide the good lane detetion. 
+3. Combine the outcome from `(step1 **or** step 2)` to provide the good lane detetion. 
 
 (thresholding steps at lines # through # in `another_file.py`).  
 Here's an example of my output for this step.  (note: this is not actually from one of the test images)
@@ -71,7 +71,7 @@ Here's an example of my output for this step.  (note: this is not actually from 
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
+The code for my perspective transform includes a function called `warper()`, which appears in the 3rd code cell of the Jupyter notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
 
 ```python
 src = np.float32(
@@ -97,13 +97,13 @@ This resulted in the following source and destination points:
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
-![alt text][image4]
+![alt text][image5]
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
 Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
 
-![alt text][image5]
+![alt text][image6]
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
@@ -113,7 +113,7 @@ I did this in lines # through # in my code in `my_other_file.py`
 
 I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
 
-![alt text][image6]
+![alt text][image7]
 
 ---
 
