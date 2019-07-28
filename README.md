@@ -95,7 +95,7 @@ This resulted in the following source and destination points:
 
 | Source        | Destination   | 
 |:-------------:|:-------------:| 
-| 274,680      | 274, 680        | 
+| 274, 680     | 274, 680        | 
 | 1046, 680   | 1046, 680      |
 | 546, 485     | 274, 468      |
 | 743, 485     | 1046, 468        |
