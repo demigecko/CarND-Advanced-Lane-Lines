@@ -59,9 +59,15 @@ I setup a new function called `cal_undistort`  to undistort the test image and o
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+I used a combination of color and gradient thresholds to generate a binary image, and the code is in the 3 session. 
+    1. Convert the test image from RGB to HLS (hue, lightness, saturation) and extarct the S-channel. The parameter of sautation can improve the lane detetion in differnent color (i.e. White or Yellow) even if under shadow of trees. 
+    2. Convert the same test image to gray, and use Sobel operator to detect edges. I use only x-Sobel for lane detetion due to the nature of the lanes are relatively vertical. 
+    3. Combine the outcome from 1 or 2 to provide the good lane detetion. 
 
+(thresholding steps at lines # through # in `another_file.py`).  
+Here's an example of my output for this step.  (note: this is not actually from one of the test images)
 
+![alt text][image4]
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
