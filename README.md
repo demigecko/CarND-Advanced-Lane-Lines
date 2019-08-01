@@ -62,7 +62,7 @@ I setup a new function called `cal_undistort`  to undistort the test image and o
 
 I used a combination of color and gradient thresholds to generate a binary image, and the code is in the 3 session. 
 1. Convert the test image from RGB to HLS (hue, lightness, saturation) and extarct the S-channel. The parameter of sautation can improve the lane detetion in differnent color (i.e. White or Yellow) even if under shadow of trees. 
-2. Convert the same test image to gray, and use Sobel operator to detect edges. I use only x-Sobel for lane detetion due to the nature of the lanes are relatively vertical. 
+2. Convert the same test image to gray, and use Sobel operator to detect edges. I use only x-Sobel for lane detetion to remove any horizontal features. 
 3. Combine the outcome from  (step1 **or** step 2) to provide the good lane detetion. 
 
 
