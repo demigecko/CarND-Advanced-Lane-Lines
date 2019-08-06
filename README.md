@@ -63,18 +63,22 @@ I setup a new function called `cal_undistort`  to undistort the test image and o
 
 I used a combination of color and gradient thresholds to generate a binary image, and the code is in the 3 session. 
 1. Import  images in BGR space by  `cv2.imread()`, it is important to distinguish this from `cv2.imread`, which is in RGB space.  
-2. Use `cv2.split()` to separeate three channels in to (b, g, r) accordingly.  
+2. Use `cv2.split()` to separeate three channels into (b, g, r) accordingly. Alternatively `b=img[:,:,0],g=img[:,:,1],r=img[:,:,2]`. 
+ In [OpenCV-Python Tutorials] (https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_core/py_basic_ops/py_basic_ops.html?highlight=split) 
+> cv2.split() is a costly operation (in terms of time), so only use it if necessary. Numpy indexing is much more efficient and should be used if possible. 
 3. The trick is to detect the yellow lanes and white lanes without involing the impact of shaow or other features.  
     Yelow is the combination of the similar amount of *Red* and *Green*, but no *Blue*, so c1 is a true-and-false image array based on  the following threshold  `(b < 120) & (r > 140) & (g > 140)`,  define `binary_1[c1]=1`
     White is the combination of the same aomnut of *Red*, *Green*, and *Blue*, so c2 is a true-and-false image array based on the following threhold  `c2 = (b > 180) & (r > 180) & (g > 180)` define `binary_2[c2]=1`
-4. then I combined binray_1 and binary_2 by `bitwise_or()` 
-5. In addition, to ensure the good quliaty of image process, I aslo detelet the mean value of the image by `np.mean()`. If the mean value is higher than 100, then there is a `if loop` to substarte a background. This step imporves the robustness of image process. 
+4. then I combined binray_1 and binary_2 by `bitwise_or()` that compute the bit-wise OR of two arrays element-wise.
+5. In addition, to ensure the good quliaty of image process, I aslo calculate the mean value of the image by `np.mean()`. If the mean value is higher than 100, then the input image will be substarted by a uniform background image. This step imporves the robustness of image process. 
+
+Comments: in the OpenCV website they split colors due to heavy image proces, however, if we can implmenting such simple color pixel detetion in the CCD in the first place, then this can greatly speed up the image process. 
 
 ```python
 def advance_procces(image):
 (b, g, r) = cv2.split(image)
-c1 = (b < 120) & (r > 140) & (g > 140)
-c2 = (b > 180) & (r > 180) & (g > 180)
+c1 = (b < 120) & (r > 140) & (g > 140) # pick the yellow lane 
+c2 = (b > 180) & (r > 180) & (g > 180) # pick the white lane
 binary_1 = np.zeros_like(b)
 binary_2 = np.zeros_like(b)
 binary_1[c1]=1
@@ -89,8 +93,9 @@ else:
 background = np.ones(warped.shape, dtype="uint8") * 0    
 subtracted_image = cv2.subtract(warped, background)
 ```
-
 Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+
+
 
 ![alt text][image4]
 
