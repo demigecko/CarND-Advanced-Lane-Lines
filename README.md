@@ -62,13 +62,13 @@ I setup a new function called `cal_undistort`  to undistort the test image and o
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
 I used a combination of color and gradient thresholds to generate a binary image, and the code is in the 3 session. 
-1. Import  images in BGR space by  `cv2.imread()`, it is important to distinguish this from `cv2.imread`, which will be in RGB 
-2. Use `cv2.split()` to separeate each channel (B, G, R) 
-3. The trick is to detelet the yellow lane and white lanes without involing the impact of shaow or other features. 
-    Yelow is the combination of the amount of Red and Green, but no Blue, so c1 is the true-and-false image array based on  the following threhold  `(b < 120) & (r > 140) & (g > 140)`,  define `binary_1[c1]=1`
-    White is the combination of the same aomnut of Red, Green, and Blue, so c2 is the true-and-false image array based on the following threhold  `c2 = (b > 180) & (r > 180) & (g > 180)` define `binary_2[c2]=1`
-4. then I combined the binray_1 and binary_2 by `bitwise_or` 
-5. In addition, to ensure the good quliaty of image process, I aslo detelet the mean value of the image by `np.mean(warp)`. If the mean value is higher than 100, then there is a `if loop` to substarte a  background. This step will help to imporve the robustness of image process. 
+1. Import  images in BGR space by  `cv2.imread()`, it is important to distinguish this from `cv2.imread`, which is in RGB space.  
+2. Use `cv2.split()` to separeate three channels in to (b, g, r) accordingly.  
+3. The trick is to detect the yellow lanes and white lanes without involing the impact of shaow or other features.  
+    Yelow is the combination of the similar amount of *Red* and *Green*, but no *Blue*, so c1 is a true-and-false image array based on  the following threshold  `(b < 120) & (r > 140) & (g > 140)`,  define `binary_1[c1]=1`
+    White is the combination of the same aomnut of *Red*, *Green*, and *Blue*, so c2 is a true-and-false image array based on the following threhold  `c2 = (b > 180) & (r > 180) & (g > 180)` define `binary_2[c2]=1`
+4. then I combined binray_1 and binary_2 by `bitwise_or()` 
+5. In addition, to ensure the good quliaty of image process, I aslo detelet the mean value of the image by `np.mean()`. If the mean value is higher than 100, then there is a `if loop` to substarte a background. This step imporves the robustness of image process. 
 
 ```python
 def advance_procces(image):
