@@ -76,22 +76,22 @@ Comments: in the OpenCV website they split colors due to heavy image proces, how
 
 ```python
 def advance_procces(image):
-(b, g, r) = cv2.split(image)
-c1 = (b < 120) & (r > 140) & (g > 140) # pick the yellow lane 
-c2 = (b > 180) & (r > 180) & (g > 180) # pick the white lane
-binary_1 = np.zeros_like(b)
-binary_2 = np.zeros_like(b)
-binary_1[c1]=1
-binary_2[c2]=1
-bitwise_or = cv2.bitwise_or(binary_1, binary_2)
-return bitwise_or
+    (b, g, r) = cv2.split(image)
+    c1 = (b < 120) & (r > 140) & (g > 140) # pick the yellow lane 
+    c2 = (b > 180) & (r > 180) & (g > 180) # pick the white lane
+    binary_1 = np.zeros_like(b)
+    binary_2 = np.zeros_like(b)
+    binary_1[c1]=1
+    binary_2[c2]=1
+    bitwise_or = cv2.bitwise_or(binary_1, binary_2)
+    return bitwise_or
 ```
 ```python
 if np.mean(warped) > 100:
-background = np.ones(warped.shape, dtype="uint8") * 20
+    background = np.ones(warped.shape, dtype="uint8") * 20
 else: 
-background = np.ones(warped.shape, dtype="uint8") * 0    
-subtracted_image = cv2.subtract(warped, background)
+    background = np.ones(warped.shape, dtype="uint8") * 0    
+    subtracted_image = cv2.subtract(warped, background)
 ```
 Here's an example of my output for this step.  (note: this is not actually from one of the test images)
 
