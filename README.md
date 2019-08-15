@@ -63,8 +63,6 @@ I setup a new function called `cal_undistort`  to undistort the test image and o
 
 The code for my perspective transform includes a function called `warper()`, which appears in the 3rd code cell of the Jupyter notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose  the source and destination points by the line plots carefully.
 
-![alt text][image3-1]
-
 ```python
 src = np.float32(
 [[274,680],[1046,680],[546,485],[743,485]])
@@ -121,9 +119,6 @@ else:
 Here's the all test images after my image process steps. As you can see, the signal-to-noise ratio is much higher. 
 
 ![alt text][image3-1]
-
-
-
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
