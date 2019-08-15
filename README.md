@@ -73,7 +73,7 @@ I used a combination of color and gradient thresholds to generate a binary image
 4. then I combined binray_1 and binary_2 by `bitwise_or()` that compute the bit-wise OR of two arrays element-wise.
 5. In addition, to ensure the good quliaty of image process, I aslo calculate the mean value of the image by `np.mean()`. If the mean value is higher than 100, then the input image will be substarted by a uniform background image. This step imporves the robustness of image process. 
 
-![alt text][image]4
+![alt text][image3-2]
 
 Comments: in the OpenCV website they split colors due to heavy image proces, however, if we can implmenting such simple color pixel detetion in the CCD in the first place, then this can greatly speed up the image process. 
 
