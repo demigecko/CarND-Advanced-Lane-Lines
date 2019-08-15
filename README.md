@@ -38,7 +38,7 @@ The goals / steps of this project are the following:
 
 ### Camera Calibration
 
-#### 1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
+#### 1. [Criteria] Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
 
 The code for this step is contained in the first code cell of the Jypyter notebook located in "./CarND-Advanced-Lane-Lines/Advanced-Lane-Lines.ipynb"  
 
@@ -50,7 +50,7 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 
 ### Pipeline (single images)
 
-#### 1. Provide an example of a distortion-corrected image.
+#### 1. [Criteria] Provide an example of a distortion-corrected image.
 
 To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
 ![alt text][image2]
@@ -59,7 +59,7 @@ I setup a new function called `cal_undistort`  to undistort the test image and o
 
 ![alt text][image3]
 
-#### 2. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
+#### 2. [Criteria] Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
 The code for my perspective transform includes a function called `warper()`, which appears in the 3rd code cell of the Jupyter notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose  the source and destination points by the line plots carefully.
 
@@ -81,7 +81,7 @@ This resulted in the following source and destination points:
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 ![alt text][image5]
 
-#### 3. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
+#### 3. [Criteria] Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
 I used a combination of color thresholds and binray opertaion to generate a binary image, and the code is in the 5 session. 
 
@@ -120,17 +120,44 @@ Here's the all test images after my image process steps. As you can see, the sig
 
 ![alt text][image3-1]
 
-#### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
+#### 4. [Criteria] Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this: 
+I used the four functions `find_lane_pixels` , `fit_polynomial`,  `search_around_poly` and  that Udacity provided in our leanring process. 
+
+It is import to trace all the input the output in each function, and thier processing flow 
+
+1. function of `find_lane_pixels(binary_warped)`
+```
+def find_lane_pixels(binary_warped):
+    return leftx, lefty, rightx, righty, delta, out_img
+```
+2. function of  `fit_poly(img_shape, leftx, lefty, rightx, righty)`
+
+```
+def fit_polynomial(binary_warped, leftx, lefty, rightx, righty, out_img, delta):
+    return out_img, ploty, left_fit, right_fit
+```
+
+> `input` are `leftx`, `lefty`, `rightx`, `righty`   
+> `output` are the fitted indices of  left lands and right lands in x and ploty is the shared y indices
+
+
+3. function of `search_around_poly(binary_warped, left_fit, right_fit)` 
+```
+def search_around_poly(binary_warped, left_fit, right_fit)
+    return result, left_fitx, right_fitx, ploty 
+```
+
+
+
 
 ![alt text][image6]
 
-#### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
+#### 5. [Criteria] Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
 I did this in lines # through # in my code in `my_other_file.py`
 
-#### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
+#### 6. [Criteria] Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
 I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
 
@@ -140,7 +167,7 @@ I implemented this step in lines # through # in my code in `yet_another_file.py`
 
 ### Pipeline (video)
 
-#### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
+#### 1. [Criteria] Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
 Here's a [link to my video result](./project_video.mp4)
 
@@ -148,7 +175,7 @@ Here's a [link to my video result](./project_video.mp4)
 
 ### Discussion
 
-#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+#### 1. [Criteria] Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
 The most of time I spend is to find the roubust lane detetion by cv2 and  
 
@@ -158,5 +185,5 @@ Here I'll talk about the approach I took, what techniques I used, what worked an
 Here is the point I can imporve.
 
 1. to save the `objpoints` and  `imgpoints` by pickel, and recall them when I need. It would save some processing time.
-2. to write the pipeplie in `class`, I think this is the technique I should develop sooner or later 
-3. I recoreded some videos by HERO, I would like to try the roubustness of my 
+3. to write the pipeplie in `class`, I think this is the technique I should develop sooner or later 
+4. I recoreded some videos by HERO, I would like to try the roubustness of my 
