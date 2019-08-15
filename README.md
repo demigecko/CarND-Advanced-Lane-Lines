@@ -59,8 +59,31 @@ I setup a new function called `cal_undistort`  to undistort the test image and o
 
 ![alt text][image3]
 
+#### 2. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-#### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
+The code for my perspective transform includes a function called `warper()`, which appears in the 3rd code cell of the Jupyter notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose  the source and destination points by the line plots carefully.
+
+![alt text][image3-1]
+
+```python
+src = np.float32(
+[[274,680],[1046,680],[546,485],[743,485]])
+dst = np.float32(
+[[274,680],[1046,680],[274,485],[1046,485])
+```
+This resulted in the following source and destination points:
+
+| Source        | Destination   | 
+|:-------------:|:-------------:| 
+| 274, 680     | 274, 680        | 
+| 1046, 680   | 1046, 680      |
+| 546, 485     | 274, 468      |
+| 743, 485     | 1046, 468        |
+
+I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
+![alt text][image5]
+
+#### 3. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
 I used a combination of color thresholds and binray opertaion to generate a binary image, and the code is in the 5 session. 
 
@@ -95,55 +118,12 @@ else:
     background = np.ones(warped.shape, dtype="uint8") * 0    
     subtracted_image = cv2.subtract(warped, background)
 ```
-Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+Here's the all test images after my image process steps. As you can see, the signal-to-noise ratio is much higher. 
 
 ![alt text][image3-1]
 
-#### 3. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
-
-I used a combination of color and gradient thresholds to generate a binary image, and the code is in the 3 session. 
-1. Convert the test image from RGB to HLS (hue, lightness, saturation) and extarct the S-channel. The parameter of sautation can improve the lane detetion in differnent color (i.e. White or Yellow) even if under shadow of trees. 
-2. Convert the same test image to gray, and use Sobel operator to detect edges. I use only x-Sobel for lane detetion to remove any horizontal features. 
-3. Combine the outcome from  (step1 **or** step 2) to provide the good lane detetion. 
 
 
-```python
-# Threshold x gradient
-thresh_min = 20 
-thresh_max = 200 
-
-# Threshold color channel
-s_thresh_min = 120 
-s_thresh_max = 255 
-```
-Here's an example of my output for this step.  (note: this is not actually from one of the test images)
-
-![alt text][image4]
-
-#### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
-
-The code for my perspective transform includes a function called `warper()`, which appears in the 3rd code cell of the Jupyter notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose  the source and destination points by the line plots carefully.
-
-![alt text][image3-1]
-
-```python
-src = np.float32(
-    [[274,680],[1046,680],[546,485],[743,485]])
-dst = np.float32(
-    [[274,680],[1046,680],[274,485],[1046,485])
-```
-This resulted in the following source and destination points:
-
-| Source        | Destination   | 
-|:-------------:|:-------------:| 
-| 274, 680     | 274, 680        | 
-| 1046, 680   | 1046, 680      |
-| 546, 485     | 274, 468      |
-| 743, 485     | 1046, 468        |
-
-I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
-
-![alt text][image5]
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
