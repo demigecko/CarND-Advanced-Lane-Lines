@@ -22,7 +22,8 @@ The goals / steps of this project are the following:
 [image1]: ./output_images/undistort_output.png "Undistorted"
 [image2]: ./test_images/test1.jpg "Road Transformed"
 [image3]: ./output_images/undistort_test1.png "Undistorted"
-[image3-1]: ./output_images/line-plot.png "Line-Plot"
+[image3-1]: /output_images/combo_all_test_images.jpg "combo"
+[image3-2]: ./output_images/line-plot.png "Line-Plot"
 [image4]: ./output_images/binary_combo_final.png "Binary Example"
 [image5]: ./output_images/warped_straight_lines.jpg "Warp Example"
 [image6]: ./examples/color_fit_lines.jpg "Fit Visual"
@@ -41,9 +42,9 @@ The goals / steps of this project are the following:
 
 The code for this step is contained in the first code cell of the Jypyter notebook located in "./CarND-Advanced-Lane-Lines/Advanced-Lane-Lines.ipynb"  
 
-I start by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
+I started by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
 
-I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result from the `camera_cal/calibration4.jpg`:  
+I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the calibration images using the `cv2.undistort()` function and obtained this result from the first 4 images in the folder of  `camera_cal/` :  
 
 ![alt text][image1]
 
@@ -72,7 +73,7 @@ I used a combination of color and gradient thresholds to generate a binary image
 4. then I combined binray_1 and binary_2 by `bitwise_or()` that compute the bit-wise OR of two arrays element-wise.
 5. In addition, to ensure the good quliaty of image process, I aslo calculate the mean value of the image by `np.mean()`. If the mean value is higher than 100, then the input image will be substarted by a uniform background image. This step imporves the robustness of image process. 
 
-![alt text][image1]
+![alt text][image]4
 
 Comments: in the OpenCV website they split colors due to heavy image proces, however, if we can implmenting such simple color pixel detetion in the CCD in the first place, then this can greatly speed up the image process. 
 
