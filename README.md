@@ -122,7 +122,7 @@ Here's the all test images after my image process steps. As you can see, the sig
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this: 
 
 ![alt text][image6]
 
