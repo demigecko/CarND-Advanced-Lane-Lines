@@ -72,6 +72,8 @@ I used a combination of color and gradient thresholds to generate a binary image
 4. then I combined binray_1 and binary_2 by `bitwise_or()` that compute the bit-wise OR of two arrays element-wise.
 5. In addition, to ensure the good quliaty of image process, I aslo calculate the mean value of the image by `np.mean()`. If the mean value is higher than 100, then the input image will be substarted by a uniform background image. This step imporves the robustness of image process. 
 
+![alt text][image1]
+
 Comments: in the OpenCV website they split colors due to heavy image proces, however, if we can implmenting such simple color pixel detetion in the CCD in the first place, then this can greatly speed up the image process. 
 
 ```python
@@ -175,4 +177,13 @@ Here's a [link to my video result](./project_video.mp4)
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
+The most of time I spend is to find the roubust lane detetion by cv2 and  
+
+
 Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+
+Here is the point I can imporve.
+
+1. to save the `objpoints` and  `imgpoints` by pickel, and recall them when I need. It would save some processing time.
+2. to write the pipeplie in `class`, I think this is the technique I should develop sooner or later 
+3. I recoreded some videos by HERO, I would like to try the roubustness of my 
