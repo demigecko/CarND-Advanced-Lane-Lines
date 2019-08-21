@@ -247,8 +247,9 @@ Here is an example of my result on a test image with annotation:
 
 #### 1. [Criteria] Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
+The video is made based on `Advanced Lane Finding_Video.ipynb` , it is a slim version for me to produce the video. 
 
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](./output_video/project_video_annotated_full.mp4)
 
 ---
 
