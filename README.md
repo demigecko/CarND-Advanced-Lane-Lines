@@ -148,18 +148,96 @@ def search_around_poly(binary_warped, left_fit, right_fit)
     return result, left_fitx, right_fitx, ploty 
 ```
 
-
-
-
 ![alt text][image6]
 
 #### 5. [Criteria] Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines # through # in my code in `my_other_file.py`
+I did this in the function of  `measure_curvature_pixels` , I basically followed the instruction to evaluate the curvature for both left and right. In my code, I made a fair assumption that both left and right lanes have same curvature.  Therefore, I introduce a parameter `delta`, it is defined as the diffence of the max values of left and right of line graph of histogram.  In case of not being able to captaure the right lane accurately due to the nature of dashed line, I defined a global variable of `prev_delta` to keep tracking the program vaild while running. I set the condition that if the differnce of the peak values is large than 300, or the points of right lane is less than 100, the pipeline will use the previous `delta` that saved in `prev_delta` globally. 
+```
+midpoint = np.int(histogram.shape[0]//2)
+leftx_base = np.argmax(histogram[:midpoint])
+rightx_base = np.argmax(histogram[midpoint:]) + midpoint
+leftx_value = max(histogram[:midpoint])
+rightx_value = max(histogram[midpoint:])
+if abs(leftx_value - rightx_value) > 300 or rightx_value < 100:
+    delta = prev_delta
+else: 
+    delta = rightx_base - leftx_base
+```
+I assuemd that the cureture of the right and left lanes are the same, which is a fair asumeption. Therefore, I shited all points in right lane by `delta`, and combine all data points of left and right lanes for the whole fitting. 
+```
+    x = np.append(leftx, rightx-delta, axis=0)
+    y = np.append(lefty, righty, axis=0)
+    left_fit = np.polyfit(y, x, 2)
+    right_fit = np.polyfit(y, x, 2)
+```
+However, in the case of not being able to find the `left_fit` and `right_fit`, I introduce anther four global variables:  `prev_left_fit` ,   `prev_right_fit` `prev_leftx` , and  `prev_rightx`. These allows the program to keep running when there is any null array happened. I set the conidtion as below. 
+
+```
+if  leftx.size > 3 and rightx.size > 3:
+x = np.append(leftx, rightx-delta, axis=0)
+y = np.append(lefty, righty, axis=0)
+left_fit = np.polyfit(y, x, 2)
+right_fit = np.polyfit(y, x, 2)
+right_fit[2] = right_fit[2] + delta
+prev_left_fit = left_fit
+prev_right_fit = right_fit
+prev_leftx =leftx
+prev_rightx = leftx
+
+else: 
+left_fit = prev_left_fit
+right_fit = prev_right_fit
+leftx = prev_leftx
+leftx = prev_rightx
+# Generate x and y values for plotting
+
+```
+After all these tricks, the proper `left_fit` and `right_fit` can be generated for the calculation of the curvature. The key infomation is to know the pixel / m in both x and y directions.  
+```
+def measure_curvature_pixels(ploty,left_fit, right_fit,):
+    ym_per_pix = 30/720 # meters per pixel in y dimension
+    xm_per_pix = 3.7/700 # meters per pixel in x dimension
+    y_eval = np.max(ploty)
+    left_curvature = ((1 + (2*left_fit[0]*y_eval + left_fit[1])**2)**1.5) / np.absolute(2*left_fit[0])
+    right_curvature = ((1 + (2*right_fit[0]*y_eval + right_fit[1])**2)**1.5) / np.absolute(2*right_fit[0])
+    return left_curvature, right_curvature
+```
+
+Once I have the curvature, then I defined the car center in the following: 
+```
+def car_offset(leftx, rightx, img_shape, xm_per_pix=3.7/800):
+    mid_imgx = img_shape[1]//2      
+    car_pos = (leftx[-1] + rightx[-1])/2
+    offsetx = (mid_imgx - car_pos) * xm_per_pix
+    return offsetx
+```
 
 #### 6. [Criteria] Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  
+```
+def unwarp_highlight(img, warp, left_points, right_points, Minv):
+    # Create an image to draw the lines on
+    warp_zero = np.zeros_like(warp).astype(np.uint8)
+    color_warp = np.dstack((warp_zero, warp_zero, warp_zero))
+
+    # Recast the x and y points into usable format for cv2.fillPoly()
+    left_fitx = left_points[0]
+    right_fitx = right_points[0]
+    ploty = left_points[1]
+    pts_left = np.array([np.transpose(np.vstack([left_fitx, ploty]))])
+    pts_right = np.array([np.flipud(np.transpose(np.vstack([right_fitx, ploty])))])
+    pts = np.hstack((pts_left, pts_right))
+    # Draw the lane onto the warped blank image
+    cv2.fillPoly(color_warp, np.int_([pts]), (0,255, 0))
+    # Warp the blank back to original image space using inverse perspective matrix (Minv)
+    img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+    reverse_warp = cv2.warpPerspective(color_warp, Minv, (img.shape[1], img.shape[0])) 
+    # Combine the result with the original image
+    return cv2.addWeighted(img, 1, reverse_warp, 0.3, 0)
+```
+Here is an example of my result on a test image with annotation: 
 
 ![alt text][image7]
 
@@ -169,6 +247,7 @@ I implemented this step in lines # through # in my code in `yet_another_file.py`
 
 #### 1. [Criteria] Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
+
 Here's a [link to my video result](./project_video.mp4)
 
 ---
@@ -176,11 +255,8 @@ Here's a [link to my video result](./project_video.mp4)
 ### Discussion
 
 #### 1. [Criteria] Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
-
-The most of time I spend is to find the roubust lane detetion by cv2 and  
-
-
 Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+The most of time I spend is to find the roubust lane detetion by cv2, and I didn't use any Sobel or gradient detetion. Purely I did it based on white and yellow color and properly substrct the backgound when it is needed. As the hardware engiener I beleive this part of calcuation can be implmented in the camera, a specialized camera for this purpose. 
 
 Here is the point I can imporve.
 
