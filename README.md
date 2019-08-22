@@ -26,7 +26,7 @@ The goals / steps of this project are the following:
 [image3-2]: ./output_images/line-plot.png "Line-Plot"
 [image4]: ./output_images/binary_combo_final.png "Binary Example"
 [image5]: ./output_images/warped_straight_lines.jpg "Warp Example"
-[image6]: ./examples/color_fit_lines.jpg "Fit Visual"
+[image6]: ./output_images/lane_pixels_fit.jpg "Poly Fit"
 [image7]: ./examples/example_output.jpg "Output"
 [video1]: ./project_video.mp4 "Video"
 
