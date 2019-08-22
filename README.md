@@ -42,7 +42,7 @@ Please pay attention that I have two jupyter notebooks, named `Advanced Lane Fin
 
 #### 1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
 
-The code of this step is contained in the first code cell of the Jypyter notebook located in "./CarND-Advanced-Lane-Lines/`Advanced Lane Finding_Steps.ipynb"  
+The code of this step is contained in the first code cell of the Jypyter notebook located in `"./CarND-Advanced-Lane-Lines/Advanced Lane Finding_Steps.ipynb`  
 
 I started by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objpoints` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
 
@@ -65,7 +65,7 @@ Note: my color space is in BGR
 
 #### 2. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `warper()`, which appears in the 3rd code cell of the Jupyter notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose  the source and destination points by the line plots carefully.
+The code for my perspective transform includes a function called `cal_undistort()`, which appears in the 3rd code cell of the Jupyter notebook).  The `cal_undistort()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the source and destination points by the line plots carefully. Note: The trick is: don't try to get the prefect straight lines after perspective transform, it will be hard for later polyfitting due to small curvature. Therefore, some degree of nonideal transform is good for later polyfitting.
 
 This resulted in the following source and destination points:
 
@@ -89,23 +89,21 @@ I verified that my perspective transform was working as expected by drawing the 
 ![alt text][image5]
 
 
-Note: there is a trick: don't try to get the straight lines after perspective transform, it will be hard for later polyfit due to small curvature. Therefore, some sort of nonideal transformation is good for later poly-fitting.
-
 #### 3. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
 I used a combination of color thresholds and binray opertaion to generate a binary image, and the code is in the 5 session. 
 
 1. Import  images in BGR space by  `cv2.imread()`, it is important to distinguish this from `cv2.imread`, which is in RGB space.  
-2. Use `cv2.split()` to separeate three channels into (b, g, r) accordingly. Alternatively `b=img[:,:,0],g=img[:,:,1],r=img[:,:,2]`. 
+2. Use `cv2.split()` to separate three channels into (b, g, r) accordingly. Alternatively `b=img[:,:,0],g=img[:,:,1],r=img[:,:,2]`. 
 > In [OpenCV-Python Tutorials](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_core/py_basic_ops/py_basic_ops.html?highlight=split) :
 > cv2.split() is a costly operation (in terms of time), so only use it if necessary. Numpy indexing is much more efficient and should be used if possible. 
-3. The trick is to detect the yellow lanes and white lanes without involving the impact of shaow or other features.
-    Yelow is the combination of the similar amount of *Red* and *Green*, but no *Blue*, so c1 is a true-and-false image array based on  the following threshold  `(b < 120) & (r > 140) & (g > 140)`,  define `binary_1[c1]=1`
+3. The trick is to detect the yellow lanes and white lanes without involving the impact of shadow or other features.
+    Yelow is the combination of the similar amount of *Red* and *Green*, but no *Blue*, so c1 is a true-and-false image array based on the following threshold  `(b < 120) & (r > 140) & (g > 140)`,  define `binary_1[c1]=1`
     White is the combination of the same aomnut of *Red*, *Green*, and *Blue*, so c2 is a true-and-false image array based on the following threhold  `c2 = (b > 180) & (r > 180) & (g > 180)` define `binary_2[c2]=1`
 4. then I combined binray_1 and binary_2 by `bitwise_or()` that compute the bit-wise OR of two arrays element-wise.
-5. In addition, to ensure the good quliaty of image process, I aslo calculate the mean value of the image by `np.mean()`. If the mean value is higher than 100, then the input image will be substarted by a uniform background image. This step imporves the robustness of image process. 
+5. In addition, to ensure the good quality of image process, I aslo calculate the mean value of the image by `np.mean()`. If the mean value is higher than 100, then the input image will be substarted by a uniform background image. This step improves the robustness of image process. 
 
-Comments: in the OpenCV website they split colors due to heavy image proces, however, if we can implmenting such simple color pixel detetion in the CCD in the first place, then this can greatly speed up the image process. 
+Comments: in the OpenCV website they split colors due to heavy image proces, however, if we can implement such simple color pixel detection in the CCD in the first place, then this can greatly speed up the image process. 
 
 ```python
 def advance_procces(image):
@@ -149,7 +147,6 @@ def find_lane_pixels(binary_warped):
 def fit_polynomial(binary_warped, leftx, lefty, rightx, righty, out_img, delta):
     return out_img, ploty, left_fit, right_fit
 ```
-
 > `input` are `leftx`, `lefty`, `rightx`, `righty`   
 > `output` are the fitted indices of  left lands and right lands in x and ploty is the shared y indices
 
@@ -161,7 +158,7 @@ def search_around_poly(binary_warped, left_fit, right_fit)
 ```
 
 ![alt text][image6]  
-This image maight not be shown properly in githut, please see it in Jupyter notebook
+This image might not be shown properly in githut, please see it in Jupyter notebook
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
@@ -179,14 +176,14 @@ if abs(leftx_value - rightx_value) > 300 or rightx_value < 100:
 else: 
     delta = rightx_base - leftx_base
 ```
-I assuemd the curvature of the right and left lanes are the same. Therefore, I shited all points in right lane by `delta`, and combine all data points of left and right lanes for the whole fitting. 
+I assumed the curvature of the right and left lanes are the same. Therefore, I shifted all points of right lane by `delta`, and combine all data points of left and right lanes for the whole fitting. 
 ```
-    x = np.append(leftx, rightx-delta, axis=0)
+    x = np.append(leftx, rightx - delta, axis=0)
     y = np.append(lefty, righty, axis=0)
     left_fit = np.polyfit(y, x, 2)
     right_fit = np.polyfit(y, x, 2)
 ```
-However, in the case of not being able to find the `curve_fit`, I introduce anther four global variables:  `prev_curve_fit` , `prev_leftx` , and  `prev_rightx`. These allows the program to keep running when there is any null array happened. I set the condition as below. 
+However, in the case of not being able to find the `curve_fit`, I introduce four global variables:  `prev_curve_fit` , `prev_leftx` , and  `prev_rightx`. These allows the program to keep running when there is any null array generated. I set the condition as below. 
 
 ```
 if  leftx.size > 10 and rightx.size > 10:
@@ -202,7 +199,7 @@ else:
     leftx = prev_leftx
     leftx = prev_rightx
 ```
-After all these tricks, the proper `curve_fit` can be generated for the calculation of the curvature. The key infomation is to know the pixel / m in both x and y directions.  
+After all these tricks, the proper `curve_fit` can be generated to the calculate the curvature. The key information is to know the pixel / m in both x and y directions.  
 ```
 def measure_curvature_pixels(ploty,curve_fit):
     ym_per_pix = 30/720 # meters per pixel in y dimension
@@ -223,7 +220,7 @@ def car_offset(leftx, rightx, img_shape, xm_per_pix=3.7/800):
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  
+I implemented this step in the following function: 
 ```
 def unwarp_highlight(img, warp, left_points, right_points, Minv):
     # Create an image to draw the lines on
@@ -255,7 +252,7 @@ Here is an example of my result on a test image with annotation:
 
 #### Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-The video is made based on `Advanced Lane Finding_Video.ipynb` that is a slim version of my codes to produce the video and video debugging. I successfully annodated the videp of `project_video.mp4` in full length (50 secends) with some wobbly lines. No catastrophic failures that would cause the car to drive off the road! 
+The video is made based on `Advanced Lane Finding_Video.ipynb` that is a slim version of my codes to produce the video and video debugging. I successfully annotated the video of `project_video.mp4` in full length (50 secends) with some wobbly lines. No catastrophic failures that would cause the car to drive off the road! 
 
 Here's a [link to my video result](./output_video/project_video_annotated_full.mp4)
 
@@ -265,10 +262,10 @@ Here's a [link to my video result](./output_video/project_video_annotated_full.m
 
 #### Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-The most of time I spent is to find the roubust lane detetion by cv2, and I didn't use any Sobel or gradient detetion. Solely I did it based on colors of White and Yellow and properly substrct the backgound when it is needed (not used in the video). As the hardware engiener I beleive this part of calcuation can be implmented in the camera, a specialized camera for this purpose. The pipeline esialy fails when it cannot capture the lanes. It is critcial to save some variables as globals variables. When the pipeline cannot detect the lane, it can take the previous values to run.
+The most of time I spent is to find the roubust lane detetion by cv2, and I didn't use any Sobel or gradient detetion. Solely I did it based on colors of White and Yellow and properly subtract the background when it is needed (not used in the video). This part of calculations can be implemented in the camera, a specialized camera for this purpose to speed up the image process. The pipeline esialy fails when it cannot capture the lanes. It is critcial to save some variables as globals variables. When the pipeline cannot detect the lane, it can take the previous values to continue running.
 
-Here is the point I can imporve.
+Here are the points I can imporve.
 
-1. to save the `objpoints` and  `imgpoints` by pickel, and recall them when I need. It would save some processing time.
+1. to save the `objpoints` and  `imgpoints` by pickle, and recall them when I need. 
 2. to write the pipeplie in `class`, it is the technique I should develop sooner or later.
-3. I have some recoreded videos by HERO, I would like to try the roubustness of my pipeline. 
+3. I have some recoreded videos by HERO, I would like to try the roubustness of my pipeline and futhur improve my pipeline
