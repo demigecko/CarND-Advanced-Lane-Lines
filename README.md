@@ -109,6 +109,8 @@ def advance_procces(image):
     bitwise_or = cv2.bitwise_or(binary_1, binary_2)
     return bitwise_or
 ```
+The following is optional.
+
 ```python
 if np.mean(warped) > 100:
     background = np.ones(warped.shape, dtype="uint8") * 20
@@ -129,7 +131,7 @@ It is import to trace all the input the output in each function, and thier proce
 1. function of `find_lane_pixels(binary_warped)`
 ```
 def find_lane_pixels(binary_warped):
-    return leftx, lefty, rightx, righty, delta, out_img
+    return leftx, lefty, rightx, righty, curve_fit, left_fitx, right_fitx, ploty
 ```
 2. function of  `fit_poly(img_shape, leftx, lefty, rightx, righty)`
 
@@ -247,7 +249,7 @@ Here is an example of my result on a test image with annotation:
 
 #### 1. [Criteria] Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-The video is made based on `Advanced Lane Finding_Video.ipynb` , it is a slim version for me to produce the video. 
+The video is made based on `Advanced Lane Finding_Video.ipynb` that is a slim version of my codes to produce the video and video debugging. I successfully annodated the videp of `project_video.mp4` in full length (50 secends) with some wobbly lines. No catastrophic failures that would cause the car to drive off the road! 
 
 Here's a [link to my video result](./output_video/project_video_annotated_full.mp4)
 
@@ -257,10 +259,10 @@ Here's a [link to my video result](./output_video/project_video_annotated_full.m
 
 #### 1. [Criteria] Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
-The most of time I spend is to find the roubust lane detetion by cv2, and I didn't use any Sobel or gradient detetion. Purely I did it based on white and yellow color and properly substrct the backgound when it is needed. As the hardware engiener I beleive this part of calcuation can be implmented in the camera, a specialized camera for this purpose. 
+The most of time I spent is to find the roubust lane detetion by cv2, and I didn't use any Sobel or gradient detetion. Solely I did it based on colors of White and Yellow and properly substrct the backgound when it is needed (not used in the video). As the hardware engiener I beleive this part of calcuation can be implmented in the camera, a specialized camera for this purpose. 
 
 Here is the point I can imporve.
 
 1. to save the `objpoints` and  `imgpoints` by pickel, and recall them when I need. It would save some processing time.
-3. to write the pipeplie in `class`, I think this is the technique I should develop sooner or later 
-4. I recoreded some videos by HERO, I would like to try the roubustness of my 
+3. to write the pipeplie in `class`, it is the technique I should develop sooner or later.
+4. I recoreded some videos by HERO, I would like to try the roubustness of my pipeline. 
