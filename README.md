@@ -27,8 +27,8 @@ The goals / steps of this project are the following:
 [image4]: ./output_images/binary_combo_final.png "Binary Example"
 [image5]: ./output_images/warped_straight_lines.png "Warp Example"
 [image6]: ./output_images/lane_pixels_fit.jpg "Poly Fit"
-[image7]: ./examples/example_output.jpg "Output"
-[video1]: ./project_video.mp4 "Video"
+[image7]: ./output_images/image_unwarp_highlight.jpg "Unwarped and highlighted"
+[video1]: ./output_video/project_video_annotated_full.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
 
@@ -161,11 +161,13 @@ def search_around_poly(binary_warped, left_fit, right_fit)
 ```
 
 ![alt text][image6]  
-This image cannot be shown properly in githut, please see it in Jupyter notebook
+This image maight not be shown properly in githut, please see it in Jupyter notebook
 
-#### 5. [Criteria] Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
+#### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in the function of  `measure_curvature_pixels` , I basically followed the instruction to evaluate the curvature for both left and right. In my code, I made a fair assumption that both left and right lanes have same curvature.  Therefore, I introduce a parameter `delta`, it is defined as the diffence of the max values of left and right of line graph of histogram.  In case of not being able to captaure the right lane accurately due to the nature of dashed line, I defined a global variable of `prev_delta` to keep tracking the program vaild while running. I set the condition that if the differnce of the peak values is large than 300, or the points of right lane is less than 100, the pipeline will use the previous `delta` that saved in `prev_delta` globally. 
+Please switch to `Advanced Lane Finding_Video` 
+
+I did this in the function of  `measure_curvature_pixels` , I basically followed the instruction to evaluate the curvature. In my code, I made a fair assumption that both left and right lanes have same curvature.  Therefore, I introduce a parameter `delta`, it is defined as the diffence of the max values of left and right of line graph of histogram.  In case of not being able to captaure the right lane accurately due to the nature of dashed lanes, I defined a global variable of `prev_delta` to keep the pipeline vaild while running. I set the condition that if the differnce of the peak values is large than 300, or the points of right lane is less than 100, the pipeline will use the previous `delta` that saved in `prev_delta` globally. 
 ```
 midpoint = np.int(histogram.shape[0]//2)
 leftx_base = np.argmax(histogram[:midpoint])
@@ -177,44 +179,37 @@ if abs(leftx_value - rightx_value) > 300 or rightx_value < 100:
 else: 
     delta = rightx_base - leftx_base
 ```
-I assuemd that the cureture of the right and left lanes are the same, which is a fair asumeption. Therefore, I shited all points in right lane by `delta`, and combine all data points of left and right lanes for the whole fitting. 
+I assuemd the curvature of the right and left lanes are the same. Therefore, I shited all points in right lane by `delta`, and combine all data points of left and right lanes for the whole fitting. 
 ```
     x = np.append(leftx, rightx-delta, axis=0)
     y = np.append(lefty, righty, axis=0)
     left_fit = np.polyfit(y, x, 2)
     right_fit = np.polyfit(y, x, 2)
 ```
-However, in the case of not being able to find the `left_fit` and `right_fit`, I introduce anther four global variables:  `prev_left_fit` ,   `prev_right_fit` `prev_leftx` , and  `prev_rightx`. These allows the program to keep running when there is any null array happened. I set the conidtion as below. 
+However, in the case of not being able to find the `curve_fit`, I introduce anther four global variables:  `prev_curve_fit` , `prev_leftx` , and  `prev_rightx`. These allows the program to keep running when there is any null array happened. I set the condition as below. 
 
 ```
-if  leftx.size > 3 and rightx.size > 3:
-x = np.append(leftx, rightx-delta, axis=0)
-y = np.append(lefty, righty, axis=0)
-left_fit = np.polyfit(y, x, 2)
-right_fit = np.polyfit(y, x, 2)
-right_fit[2] = right_fit[2] + delta
-prev_left_fit = left_fit
-prev_right_fit = right_fit
-prev_leftx =leftx
-prev_rightx = leftx
+if  leftx.size > 10 and rightx.size > 10:
+    x = np.append(leftx, rightx-delta, axis=0)
+    y = np.append(lefty, righty, axis=0)
+    curve_fit = np.polyfit(y, x, 2)
+    prev_curve_fit = curve_fit
+    prev_leftx =leftx
+    prev_rightx = leftx
 
 else: 
-left_fit = prev_left_fit
-right_fit = prev_right_fit
-leftx = prev_leftx
-leftx = prev_rightx
-# Generate x and y values for plotting
-
+    curve_fit = prev_curve_fit
+    leftx = prev_leftx
+    leftx = prev_rightx
 ```
-After all these tricks, the proper `left_fit` and `right_fit` can be generated for the calculation of the curvature. The key infomation is to know the pixel / m in both x and y directions.  
+After all these tricks, the proper `curve_fit` can be generated for the calculation of the curvature. The key infomation is to know the pixel / m in both x and y directions.  
 ```
-def measure_curvature_pixels(ploty,left_fit, right_fit,):
+def measure_curvature_pixels(ploty,curve_fit):
     ym_per_pix = 30/720 # meters per pixel in y dimension
     xm_per_pix = 3.7/700 # meters per pixel in x dimension
     y_eval = np.max(ploty)
-    left_curvature = ((1 + (2*left_fit[0]*y_eval + left_fit[1])**2)**1.5) / np.absolute(2*left_fit[0])
-    right_curvature = ((1 + (2*right_fit[0]*y_eval + right_fit[1])**2)**1.5) / np.absolute(2*right_fit[0])
-    return left_curvature, right_curvature
+    curvature = ((1 + (2*curve_fit[0]*y_eval + curve_fit[1])**2)**1.5) / np.absolute(2*curve_fit[0])
+    return curvature
 ```
 
 Once I have the curvature, then I defined the car center in the following: 
@@ -226,7 +221,7 @@ def car_offset(leftx, rightx, img_shape, xm_per_pix=3.7/800):
     return offsetx
 ```
 
-#### 6. [Criteria] Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
+#### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
 I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  
 ```
