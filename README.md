@@ -1,7 +1,5 @@
 ## Advanced Lane-Lines by demigecko 
 
-### This writeup is still in a working progress. 
-
 ---
 
 **Advanced Lane Finding Project**
