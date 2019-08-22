@@ -36,30 +36,32 @@ The goals / steps of this project are the following:
 
 ---
 
-Please pay attention that I have two jupyter notebooks, named `Advanced Lane Finding_Steps` and `Advanced Lane Finding_Video`. The former file is to generate the ste-by-step outcomes, and the later one is mainly focused on the video output and debugging.  
+Please pay attention that I have two jupyter notebooks, named `Advanced Lane Finding_Steps` and `Advanced Lane Finding_Video`. The former file is to generate the step-by-step outcomes for Rubric Points, and the later one is mainly focused on the video output and debugging.  
 
 ### Camera Calibration 
 
-#### 1. [Criteria] Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
+#### 1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
 
-The code for this step is contained in the first code cell of the Jypyter notebook located in "./CarND-Advanced-Lane-Lines/`Advanced Lane Finding_Steps.ipynb"  
+The code of this step is contained in the first code cell of the Jypyter notebook located in "./CarND-Advanced-Lane-Lines/`Advanced Lane Finding_Steps.ipynb"  
 
 I started by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objpoints` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
 
-I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the calibration images using the `cv2.undistort()` function and obtained this result from the first 4 images in the folder of  `camera_cal/` :  
+I then used the output `objpoints` and `imgpoints` to compute the transformation matrix of camera calibration and distortion coefficients using the `cv2.calibrateCamera()` .  I correct the distortion to those test images by using the `cv2.undistort()` and the first 4 images in the folder of  `camera_cal/` is shown below:  
 
 ![alt text][image1]
 
 ### Pipeline (single images)
 
-#### 1. [Criteria] Provide an example of a distortion-corrected image.
+#### 1. Provide an example of a distortion-corrected image.
 
-To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like the following one:
+To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like the following:
 ![alt text][image2]
 
 I setup a new function called `cal_undistort`  to undistort the test image and obtained this outcome from  `test_images/straight_lines2.jpg`:
 
 ![alt text][image3]
+
+Note: my color space is in BGR
 
 #### 2. [Criteria] Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
@@ -69,16 +71,16 @@ This resulted in the following source and destination points:
 
 ```python
 src = np.float32(
-[[280,  700],  # Bottom left
-[595,  460],  # Top left
-[725,  460],  # Top right
-[1125, 700]]) # Bottom right
+    [[280,  700],  # Bottom left
+    [595,  460],   # Top left
+    [725,  460],   # Top right
+    [1125, 700]])  # Bottom right
 
 dst = np.float32(
-[[250,  720],  # Bottom left
-[250,    0],  # Top left
-[1065,   0],  # Top right
-[1065, 720]]) # Bottom right
+    [[250,  720],  # Bottom left
+    [250,    0],   # Top left
+    [1065,   0],   # Top right
+    [1065, 720]])  # Bottom right
 
 M = cv2.getPerspectiveTransform(src, dst)
 ```
@@ -87,8 +89,9 @@ I verified that my perspective transform was working as expected by drawing the 
 ![alt text][image5]
 
 
-Note: don't try to get the straight lines, it will be hard, some sort of distroetion is good for later poly-fitting.
-#### 3. [Criteria] Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
+Note: there is a trick: don't try to get the straight lines after perspective transform, it will be hard for later polyfit due to small curvature. Therefore, some sort of nonideal transformation is good for later poly-fitting.
+
+#### 3. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
 I used a combination of color thresholds and binray opertaion to generate a binary image, and the code is in the 5 session. 
 
@@ -116,7 +119,7 @@ def advance_procces(image):
     bitwise_or = cv2.bitwise_or(binary_1, binary_2)
     return bitwise_or
 ```
-The following is optional.
+The following step is optional.
 
 ```python
 if np.mean(warped) > 100:
@@ -125,13 +128,13 @@ else:
     background = np.ones(warped.shape, dtype="uint8") * 0    
     subtracted_image = cv2.subtract(warped, background)
 ```
-Here's the all test images after my image process steps. As you can see, the signal-to-noise ratio is much higher. 
+Here's the all test images after my image process steps. As you can see, the signal-to-noise ratio is good.  
 
 ![alt text][image3-1]
 
-#### 4. [Criteria] Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
+#### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-I used the four functions `find_lane_pixels` , `fit_polynomial`,  `search_around_poly` and  that Udacity provided in our leanring process. 
+I used the four functions `find_lane_pixels` , `fit_polynomial`,  `search_around_poly`  that Udacity provided in our leanring process. 
 
 It is import to trace all the input the output in each function, and thier processing flow 
 
