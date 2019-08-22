@@ -253,7 +253,7 @@ Here is an example of my result on a test image with annotation:
 
 ### Pipeline (video)
 
-#### 7. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
+#### Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
 The video is made based on `Advanced Lane Finding_Video.ipynb` that is a slim version of my codes to produce the video and video debugging. I successfully annodated the videp of `project_video.mp4` in full length (50 secends) with some wobbly lines. No catastrophic failures that would cause the car to drive off the road! 
 
@@ -263,7 +263,7 @@ Here's a [link to my video result](./output_video/project_video_annotated_full.m
 
 ### Discussion
 
-#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+#### Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
 The most of time I spent is to find the roubust lane detetion by cv2, and I didn't use any Sobel or gradient detetion. Solely I did it based on colors of White and Yellow and properly substrct the backgound when it is needed (not used in the video). As the hardware engiener I beleive this part of calcuation can be implmented in the camera, a specialized camera for this purpose. The pipeline esialy fails when it cannot capture the lanes. It is critcial to save some variables as globals variables. When the pipeline cannot detect the lane, it can take the previous values to run.
 
