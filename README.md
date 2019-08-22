@@ -36,13 +36,15 @@ The goals / steps of this project are the following:
 
 ---
 
-### Camera Calibration
+Please pay attention that I have two jupyter notebooks, named `Advanced Lane Finding_Steps` and `Advanced Lane Finding_Video`. The former file is to generate the ste-by-step outcomes, and the later one is mainly focused on the video output and debugging.  
+
+### Camera Calibration 
 
 #### 1. [Criteria] Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
 
-The code for this step is contained in the first code cell of the Jypyter notebook located in "./CarND-Advanced-Lane-Lines/Advanced-Lane-Lines.ipynb"  
+The code for this step is contained in the first code cell of the Jypyter notebook located in "./CarND-Advanced-Lane-Lines/`Advanced Lane Finding_Steps.ipynb"  
 
-I started by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
+I started by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objpoints` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
 
 I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the calibration images using the `cv2.undistort()` function and obtained this result from the first 4 images in the folder of  `camera_cal/` :  
 
@@ -52,7 +54,7 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 
 #### 1. [Criteria] Provide an example of a distortion-corrected image.
 
-To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
+To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like the following one:
 ![alt text][image2]
 
 I setup a new function called `cal_undistort`  to undistort the test image and obtained this outcome from  `test_images/straight_lines2.jpg`:
@@ -63,24 +65,29 @@ I setup a new function called `cal_undistort`  to undistort the test image and o
 
 The code for my perspective transform includes a function called `warper()`, which appears in the 3rd code cell of the Jupyter notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose  the source and destination points by the line plots carefully.
 
-```python
-src = np.float32(
-[[274,680],[1046,680],[546,485],[743,485]])
-dst = np.float32(
-[[274,680],[1046,680],[274,485],[1046,485])
-```
 This resulted in the following source and destination points:
 
-| Source        | Destination   | 
-|:-------------:|:-------------:| 
-| 274, 680     | 274, 680        | 
-| 1046, 680   | 1046, 680      |
-| 546, 485     | 274, 468      |
-| 743, 485     | 1046, 468        |
+```python
+src = np.float32(
+[[280,  700],  # Bottom left
+[595,  460],  # Top left
+[725,  460],  # Top right
+[1125, 700]]) # Bottom right
+
+dst = np.float32(
+[[250,  720],  # Bottom left
+[250,    0],  # Top left
+[1065,   0],  # Top right
+[1065, 720]]) # Bottom right
+
+M = cv2.getPerspectiveTransform(src, dst)
+```
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 ![alt text][image5]
 
+
+Note: don't try to get the straight lines, it will be hard, some sort of distroetion is good for later poly-fitting.
 #### 3. [Criteria] Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
 I used a combination of color thresholds and binray opertaion to generate a binary image, and the code is in the 5 session. 
