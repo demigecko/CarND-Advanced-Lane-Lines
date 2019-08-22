@@ -25,7 +25,7 @@ The goals / steps of this project are the following:
 [image3-1]: /output_images/combo_all_test_images.jpg "combo"
 [image3-2]: ./output_images/line-plot.png "Line-Plot"
 [image4]: ./output_images/binary_combo_final.png "Binary Example"
-[image5]: ./output_images/warped_straight_lines.jpg "Warp Example"
+[image5]: ./output_images/warped_straight_lines.png "Warp Example"
 [image6]: ./output_images/lane_pixels_fit.jpg "Poly Fit"
 [image7]: ./examples/example_output.jpg "Output"
 [video1]: ./project_video.mp4 "Video"
@@ -160,7 +160,8 @@ def search_around_poly(binary_warped, left_fit, right_fit)
     return result, left_fitx, right_fitx, ploty 
 ```
 
-![alt text][image6]
+![alt text][image6]  
+This image cannot be shown properly in githut, please see it in Jupyter notebook
 
 #### 5. [Criteria] Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
