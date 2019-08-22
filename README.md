@@ -63,7 +63,7 @@ I setup a new function called `cal_undistort`  to undistort the test image and o
 
 Note: my color space is in BGR
 
-#### 2. [Criteria] Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
+#### 2. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
 The code for my perspective transform includes a function called `warper()`, which appears in the 3rd code cell of the Jupyter notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose  the source and destination points by the line plots carefully.
 
@@ -264,7 +264,7 @@ Here's a [link to my video result](./output_video/project_video_annotated_full.m
 ### Discussion
 
 #### 1. [Criteria] Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+
 The most of time I spent is to find the roubust lane detetion by cv2, and I didn't use any Sobel or gradient detetion. Solely I did it based on colors of White and Yellow and properly substrct the backgound when it is needed (not used in the video). As the hardware engiener I beleive this part of calcuation can be implmented in the camera, a specialized camera for this purpose. 
 
 Here is the point I can imporve.
